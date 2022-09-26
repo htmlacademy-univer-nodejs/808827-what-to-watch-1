@@ -1,17 +1,17 @@
-import { readFileSync } from "fs";
-import { Genre } from "../../types/genre.type.js";
-import { Movie } from "../../types/movie.type.js";
-import { User } from "../../types/user.type.js";
+import { readFileSync } from 'fs';
+import { Genre } from '../../types/genre.type.js';
+import { Movie } from '../../types/movie.type.js';
+import { User } from '../../types/user.type.js';
 
-import { FileReaderInterface } from "./file-reader.interface.js";
+import { FileReaderInterface } from './file-reader.interface.js';
 
 export default class TSVFileReader implements FileReaderInterface {
-  private rawData = "";
+  private rawData = '';
 
   constructor(public filename: string) {}
 
   public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: "utf8" });
+    this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
   }
 
   public toArray(): Movie[] {
@@ -20,9 +20,9 @@ export default class TSVFileReader implements FileReaderInterface {
     }
 
     return this.rawData
-      .split("\n")
-      .filter((row) => row.trim() !== "")
-      .map((line) => line.split("\t"))
+      .split('\n')
+      .filter((row) => row.trim() !== '')
+      .map((line) => line.split('\t'))
       .map(
         ([
           title,
@@ -49,14 +49,14 @@ export default class TSVFileReader implements FileReaderInterface {
           description,
           publicationDate,
           genre: genre as Genre,
-          createdYear: parseInt(createdYear) as number,
+          createdYear: parseInt(createdYear, 10) as number,
           rating: parseFloat(rating) as number,
           videoPreviewLink,
           videoLink,
-          actors: actors.split(";"),
+          actors: actors.split(';'),
           director,
-          movieDuration: parseInt(movieDuration) as number,
-          commentAmount: parseInt(commentAmount) as number,
+          movieDuration: parseInt(movieDuration, 10) as number,
+          commentAmount: parseInt(commentAmount, 10) as number,
           user: {
             name: username,
             email,
