@@ -1,4 +1,4 @@
-import { Genre } from "./genre.type";
+import { Genre } from './genre.type';
 
 export type MockData = {
   titles: string[];

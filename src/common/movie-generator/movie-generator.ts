@@ -1,10 +1,10 @@
-import { MockData } from "../../types/mock-data.type.js";
+import { MockData } from '../../types/mock-data.type.js';
 import {
   generateRandomValue,
   getRandomItem,
   getRandomItems,
-} from "../../utils/random.js";
-import { MovieGeneratorInterface } from "./movie-generator.interface.js";
+} from '../../utils/random.js';
+import { MovieGeneratorInterface } from './movie-generator.interface.js';
 import dayjs from 'dayjs';
 
 const MIN_YEAR = 1970;
@@ -32,7 +32,7 @@ export default class MovieGenerator implements MovieGeneratorInterface {
       this.mockData.videoPreviewLinks
     );
     const videoLink = getRandomItem<string>(this.mockData.videoLinks);
-    const actors = getRandomItems<string>(this.mockData.actors).join(";");
+    const actors = getRandomItems<string>(this.mockData.actors).join(';');
     const director = getRandomItem<string>(this.mockData.directors);
     const movieDuration = generateRandomValue(MIN_DURATION, MAX_DURATION);
     const commentAmount = generateRandomValue(MIN_COMMENTS, MAX_COMMENTS);
@@ -68,6 +68,6 @@ export default class MovieGenerator implements MovieGeneratorInterface {
       poster,
       backgroundImage,
       backgroundColor,
-    ].join("\t");
+    ].join('\t');
   }
 }

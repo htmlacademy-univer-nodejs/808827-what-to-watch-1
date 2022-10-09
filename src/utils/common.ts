@@ -1,5 +1,5 @@
 export const createMovie = (row: string) => {
-  const tokens = row.replace("\n", "").split("\t");
+  const tokens = row.replace('\n', '').split('\t');
   const [
     title,
     description,
@@ -30,7 +30,7 @@ export const createMovie = (row: string) => {
     rating: Number(rating),
     videoPreviewLink,
     videoLink,
-    actors: actors.split(";"),
+    actors: actors.split(';'),
     director,
     movieDuration: Number(movieDuration),
     commentAmount: Number(commentAmount),
@@ -43,7 +43,7 @@ export const createMovie = (row: string) => {
     posterLink,
     backgroundPictureLink,
     backgroundColor,
-  }
+  };
 };
 
 export function getErrorMessage(error: unknown): string {
