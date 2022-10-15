@@ -1,13 +1,13 @@
 export const genres = [
-  "comedy",
-  "crime",
-  "documentary",
-  "drama",
-  "horror",
-  "family",
-  "romance",
-  "scifi",
-  "thriller",
+  'comedy',
+  'crime',
+  'documentary',
+  'drama',
+  'horror',
+  'family',
+  'romance',
+  'scifi',
+  'thriller',
 ];
 
 const genresStrings: readonly string[] = genres;

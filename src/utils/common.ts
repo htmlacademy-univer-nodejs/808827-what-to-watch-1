@@ -1,4 +1,4 @@
-import { asGenre } from "../types/genre.type.js";
+import { asGenre } from '../types/genre.type.js';
 
 export const createMovie = (row: string) => {
   const tokens = row.replace('\n', '').split('\t');
