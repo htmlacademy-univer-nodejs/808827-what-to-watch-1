@@ -31,7 +31,9 @@ export default class TSVFileReader
         endLinePosition++;
         lineRead = lineRead.slice(endLinePosition);
         importedRowCount++;
-        this.emit('line', completeRow);
+        await new Promise((resolve) => {
+          this.emit('line', completeRow, resolve);
+        });
       }
     }
 
