@@ -1,24 +1,24 @@
-import { DatabaseInterface } from "../common/database-client/database.interface.js";
-import DatabaseService from "../common/database-client/database.service.js";
-import TSVFileReader from "../common/file-reader/tsv-file-reader.js";
-import ConsoleLoggerService from "../common/logger/console-logger.service.js";
-import { LoggerInterface } from "../common/logger/logger.interface.js";
-import { MovieServiceInterface } from "../modules/movie/movie-service.interface.js";
-import { MovieModel } from "../modules/movie/movie.entity.js";
-import MovieService from "../modules/movie/movie.service.js";
-import { UserServiceInterface } from "../modules/user/user-service.interface.js";
-import { UserModel } from "../modules/user/user.entity.js";
-import UserService from "../modules/user/user.service.js";
-import { Movie } from "../types/movie.type.js";
-import { createMovie, getErrorMessage } from "../utils/common.js";
-import { getURI } from "../utils/db.js";
-import { CliCommandInterface } from "./cli-command.interface.js";
+import { DatabaseInterface } from '../common/database-client/database.interface.js';
+import DatabaseService from '../common/database-client/database.service.js';
+import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
+import ConsoleLoggerService from '../common/logger/console-logger.service.js';
+import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { MovieServiceInterface } from '../modules/movie/movie-service.interface.js';
+import { MovieModel } from '../modules/movie/movie.entity.js';
+import MovieService from '../modules/movie/movie.service.js';
+import { UserServiceInterface } from '../modules/user/user-service.interface.js';
+import { UserModel } from '../modules/user/user.entity.js';
+import UserService from '../modules/user/user.service.js';
+import { Movie } from '../types/movie.type.js';
+import { createMovie, getErrorMessage } from '../utils/common.js';
+import { getURI } from '../utils/db.js';
+import { CliCommandInterface } from './cli-command.interface.js';
 
 const DEFAULT_DB_PORT = 27017;
-const DEFAULT_USER_PASSWORD = "123456";
+const DEFAULT_USER_PASSWORD = '123456';
 
 export default class ImportCommand implements CliCommandInterface {
-  public readonly name = "--import";
+  public readonly name = '--import';
   private userService!: UserServiceInterface;
   private movieService!: MovieServiceInterface;
   private databaseService!: DatabaseInterface;
@@ -49,7 +49,7 @@ export default class ImportCommand implements CliCommandInterface {
       userId: user.id,
     });
   }
-  
+
   private async onLine(line: string, resolve: () => void) {
     const movie = createMovie(line);
     console.log(movie);
@@ -82,8 +82,8 @@ export default class ImportCommand implements CliCommandInterface {
     await this.databaseService.connect(uri);
     console.log('connected');
     const fileReader = new TSVFileReader(filename.trim());
-    fileReader.on("line", this.onLine);
-    fileReader.on("end", this.onComplete);
+    fileReader.on('line', this.onLine);
+    fileReader.on('end', this.onComplete);
 
     try {
       await fileReader.read();

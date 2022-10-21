@@ -1,10 +1,10 @@
-import { UserEntity, UserModel } from "./user.entity.js";
-import { DocumentType } from "@typegoose/typegoose/lib/types.js";
-import CreateUserDto from "./dto/create-user.dto.js";
-import { UserServiceInterface } from "./user-service.interface.js";
-import { inject, injectable } from "inversify";
-import { Component } from "../../types/component.types.js";
-import { LoggerInterface } from "../../common/logger/logger.interface.js";
+import { UserEntity, UserModel } from './user.entity.js';
+import { DocumentType } from '@typegoose/typegoose/lib/types.js';
+import CreateUserDto from './dto/create-user.dto.js';
+import { UserServiceInterface } from './user-service.interface.js';
+import { inject, injectable } from 'inversify';
+import { Component } from '../../types/component.types.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import {types} from '@typegoose/typegoose';
 
 @injectable()
@@ -13,6 +13,7 @@ export default class UserService implements UserServiceInterface {
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
+
   public async create(
     dto: CreateUserDto,
     salt: string
@@ -25,6 +26,7 @@ export default class UserService implements UserServiceInterface {
 
     return result;
   }
+
   public async findByEmail(
     email: string
   ): Promise<DocumentType<UserEntity> | null> {
