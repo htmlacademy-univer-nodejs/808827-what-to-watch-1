@@ -1,4 +1,5 @@
 import { asGenre } from '../types/genre.type.js';
+import crypto from 'crypto';
 
 export const createMovie = (row: string) => {
   const tokens = row.replace('\n', '').split('\t');
@@ -51,3 +52,8 @@ export const createMovie = (row: string) => {
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
 }
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
+};
