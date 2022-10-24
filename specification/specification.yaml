@@ -1,0 +1,458 @@
+openapi: '3.0.2'
+info:
+  title: API сервер для проекта «Что посмотреть».
+  description: Список ресурсов и маршрутов сервера «Что посмотреть».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: '1.0.0'
+tags:
+  - name: films
+    description: Действия с фильмами.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+paths:
+  /films:
+    post:
+      tags:
+        - films
+      operationId: addNewFilm
+      summary: Добавление фильма
+      description: Добавление новой карточки с фильмом
+      requestBody:
+        description: Данные для создания новой карточки с фильмом
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addNewFilm'
+        required: true
+      responses:
+        '200':
+          description: Новая карточка фильма добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+    get:
+      tags:
+        - films
+      operationId: getFilms
+      summary: Получение фильмов
+      description: Получение списка фильмов
+      parameters:
+          - in: query
+            name: genre
+            schema:
+              type: string
+              enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
+            description: Жанр фильмов для получения списка
+      responses:
+        '200':
+          description: Список фильмов получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/film'
+  /films/{filmId}:
+    get:
+      tags:
+        - films
+      operationId: getFilmById
+      summary: Получение данных фильма
+      description: Получение детальной информации по фильму
+      parameters:
+        - in: path
+          name: filmId
+          schema:
+            type: string
+          required: true
+          description: Идентификатор фильма
+          example: aaa123
+      responses:
+        '200':
+          description: Данные фильма получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+    delete:
+      tags:
+        - films
+      operationId: deleteFilm
+      summary: Удаление фильма
+      description: Удаление карточки фильма
+      parameters:
+        - in: path
+          name: filmId
+          schema:
+            type: string
+          required: true
+          description: Идентификатор фильма
+          example: aaa123
+      responses:
+        '200':
+          description: Фильм удален
+    put:
+      tags:
+        - films
+      operationId: editFilm
+      summary: Изменить фильм
+      description: Редактирование карточки фильма
+      parameters:
+        - in: path
+          name: filmId
+          schema:
+            type: string
+          required: true
+          description: Идентификатор фильма
+          example: aaa123
+      requestBody:
+        description: Измененные данные фильма
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addNewFilm'
+      responses:
+        '200':
+          description: Фильм изменен
+  /films/promo:
+    get:
+      tags:
+        - films
+      operationId: getPromoFilm
+      summary: Получение промо-фильма
+      description: Получение промо-фильма
+      responses:
+        '200':
+          description: Данные промо-фильма получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+  /films/favourites:
+    get:
+      tags:
+        - films
+      operationId: getFavouritesFilms
+      summary: Получение фильмов к просмотру
+      description: Получить список фильмов «К просмотру»
+      responses:
+        '200':
+          description: Список фильмов «К просмотру» получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/film'
+  /films/{filmId}/{toWatch}:
+    post:
+      tags:
+        - films
+      operationId: setToWatchStatus
+      summary: Получение данных фильма
+      description: Получение детальной информации по фильму
+      parameters:
+        - in: path
+          name: filmId
+          required: true
+          schema:
+            type: string
+          description: Идентификатор фильма
+          example: aaa123
+        - in: path
+          name: toWatch
+          required: true
+          schema:
+              type: number
+              enum: [0, 1]
+          description: Статус фильма. Может быть 1 или 0, где 1 добавляет фильма в список «к просмотру», а 0 удаляет
+          example: 1
+      responses:
+        '200':
+          description: Данные фильма получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+
+  /films/{filmId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Комментарии к фильму
+      description: Получить список комментариев для определённого фильма
+      parameters:
+        - in: path
+          name: filmId
+          schema:
+            type: string
+          required: true
+          description: Идентификатор фильма
+          example: aaa123
+      responses:
+        '200':
+          description: Комментарии для фильма получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+    post:
+      tags:
+        - comments
+      summary: Добавить комментарий
+      description: Добавить новый комментарий к определённому фильму
+      parameters:
+        - in: path
+          name: filmId
+          schema:
+            type: string
+          required: true
+          description: Идентификатор фильма
+          example: aaa123
+      requestBody:
+        required: true
+        description: Данные для добавления комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addComment'
+      responses:
+        '200':
+          description: Комментарии для фильма получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+      responses:
+        '201':
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '409':
+          description: Пользователь с таким email уже существует.
+
+  /login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+      requestBody:
+        description: Логин и пароль пользователя
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+      responses:
+        '200':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+  /logout:
+    delete:
+      tags:
+        - users
+      summary: Завершить сеанс
+      description: Завершает сеанс пользователя
+      responses:
+        '204':
+          description: Сеанс завершен
+
+components:
+  schemas:
+    film:
+      type: object
+      properties:
+        id:
+          type: string
+          example: aaa123
+        title:
+          type: string
+        description:
+          type: string
+        postDate:
+          type: string
+          format: date
+        genre:
+          type: string
+          enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
+        year:
+          type: integer
+        rating:
+          type: number
+        videoPreview:
+          type: string
+          format: uri
+        video:
+          type: string
+          format: uri
+        starring:
+          type: array
+          items:
+            type: string
+        director:
+          type: string
+        runTime:
+          type: integer
+        commentsCount:
+          type: integer
+        user:
+          $ref: '#/components/schemas/user'
+        posterImage:
+          type: string
+          format: uri
+        backgroundImage:
+          type: string
+          format: uri
+        backgroundColor:
+          type: string
+          format: uri
+
+    addNewFilm:
+      type: object
+      properties:
+          title:
+            type: string
+            minLength: 2
+            maxLength: 100
+          description:
+            type: string
+            minLength: 20
+            maxLength: 1024
+          postDate:
+            type: string
+            format: date
+          genre:
+            type: string
+            enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
+          year:
+            type: integer
+            minimum: 1880
+          videoPreview:
+            type: string
+            format: uri
+          video:
+            type: string
+            format: uri
+          starring:
+            type: array
+            items:
+              type: string
+          director:
+            type: string
+            minLength: 2
+            maxLength: 50
+          runTime:
+            type: integer
+          posterImage:
+            type: string
+            format: uri
+          backgroundImage:
+            type: string
+            format: uri
+          backgroundColor:
+            type: string
+            format: uri
+
+    comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        date:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/user'
+
+    addComment:
+      type: object
+      properties:
+        text:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        date:
+          type: string
+          format: date-time
+
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          example: aaa123
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+    createUser:
+      type: object
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+        firstname:
+          type: string
+          example: Keks
+        lastname:
+          type: string
+          example: Cat
+        password:
+          type: string
+          example: qwerty123
