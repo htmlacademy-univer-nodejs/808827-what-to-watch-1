@@ -1,12 +1,12 @@
-import { inject, injectable } from "inversify";
-import { MovieServiceInterface } from "./movie-service.interface.js";
-import CreateMovieDto from "./dto/create-movie.dto.js";
-import { DocumentType, types } from "@typegoose/typegoose";
-import { MovieEntity } from "./movie.entity.js";
-import { Component } from "../../types/component.types.js";
-import { LoggerInterface } from "../../common/logger/logger.interface.js";
-import { Genre } from "../../types/genre.type.js";
-import UpdateMovieDto from "./dto/update-movie.dto.js";
+import { inject, injectable } from 'inversify';
+import { MovieServiceInterface } from './movie-service.interface.js';
+import CreateMovieDto from './dto/create-movie.dto.js';
+import { DocumentType, types } from '@typegoose/typegoose';
+import { MovieEntity } from './movie.entity.js';
+import { Component } from '../../types/component.types.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { Genre } from '../../types/genre.type.js';
+import UpdateMovieDto from './dto/update-movie.dto.js';
 
 @injectable()
 export default class MovieService implements MovieServiceInterface {
@@ -29,7 +29,7 @@ export default class MovieService implements MovieServiceInterface {
   ): Promise<DocumentType<MovieEntity> | null> {
     return this.movieModel
       .findByIdAndUpdate(filmId, dto, { new: true })
-      .populate(["userId"])
+      .populate(['userId'])
       .exec();
   }
 
@@ -40,19 +40,19 @@ export default class MovieService implements MovieServiceInterface {
   }
 
   public async find(): Promise<DocumentType<MovieEntity>[]> {
-    return this.movieModel.find().populate(["userId"]).exec();
+    return this.movieModel.find().populate(['userId']).exec();
   }
 
   public async findByGenre(
     genre: Genre
   ): Promise<DocumentType<MovieEntity>[]> {
-    return this.movieModel.find({ genre: genre }).populate(["userId"]).exec();
+    return this.movieModel.find({ genre: genre }).populate(['userId']).exec();
   }
 
   public async findById(
     filmId: string
   ): Promise<DocumentType<MovieEntity> | null> {
-    return this.movieModel.findById(filmId).populate(["userId"]).exec();
+    return this.movieModel.findById(filmId).populate(['userId']).exec();
   }
 
   public async increaseCommentCount(
