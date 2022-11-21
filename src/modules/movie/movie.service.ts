@@ -55,6 +55,17 @@ export default class MovieService implements MovieServiceInterface {
     return this.movieModel.findById(filmId).populate(['userId']).exec();
   }
 
+  public async findByTitle(title: string): Promise<DocumentType<MovieEntity> | null> {
+    return this.movieModel.findOne({title});
+  }
+
+  public async findPromoFilm(filmId: string): Promise<DocumentType<MovieEntity> | null> {
+    return this.movieModel
+      .findById(filmId)
+      .populate('userId')
+      .exec();
+  }
+
   public async increaseCommentCount(
     filmId: string
   ): Promise<DocumentType<MovieEntity> | null> {

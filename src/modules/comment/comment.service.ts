@@ -33,4 +33,20 @@ export default class CommentService implements CommentServiceInterface {
       .populate(['userId'])
       .exec();
   }
+
+  public async update(
+    movieId: string,
+    dto: Partial<CreateCommentDto>
+  ): Promise<DocumentType<CommentEntity> | null> {
+    return this.commentModel.findByIdAndUpdate({ _id: movieId }, dto, {
+      new: true,
+    });
+  }
+
+  public async delete(filmId: string): Promise<void> {
+    const records = await this.commentModel.find({ filmId: filmId });
+    for await (const record of records) {
+      await this.update(record.id, { deleted: true });
+    }
+  }
 }
