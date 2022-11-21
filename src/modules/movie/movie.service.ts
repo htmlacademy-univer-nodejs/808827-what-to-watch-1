@@ -24,19 +24,19 @@ export default class MovieService implements MovieServiceInterface {
   }
 
   public async updateById(
-    filmId: string,
+    movieId: string,
     dto: UpdateMovieDto
   ): Promise<DocumentType<MovieEntity> | null> {
     return this.movieModel
-      .findByIdAndUpdate(filmId, dto, { new: true })
+      .findByIdAndUpdate(movieId, dto, { new: true })
       .populate(['userId'])
       .exec();
   }
 
   public async deleteById(
-    filmId: string
+    movieId: string
   ): Promise<DocumentType<MovieEntity> | null> {
-    return this.movieModel.findByIdAndDelete(filmId).exec();
+    return this.movieModel.findByIdAndDelete(movieId).exec();
   }
 
   public async find(): Promise<DocumentType<MovieEntity>[]> {
@@ -50,38 +50,37 @@ export default class MovieService implements MovieServiceInterface {
   }
 
   public async findById(
-    filmId: string
+    movieId: string
   ): Promise<DocumentType<MovieEntity> | null> {
-    return this.movieModel.findById(filmId).populate(['userId']).exec();
+    return this.movieModel.findById(movieId).populate(['userId']).exec();
   }
 
   public async findByTitle(title: string): Promise<DocumentType<MovieEntity> | null> {
     return this.movieModel.findOne({title});
   }
 
-  public async findPromoFilm(filmId: string): Promise<DocumentType<MovieEntity> | null> {
+  public async findPromoFilm(movieId: string): Promise<DocumentType<MovieEntity> | null> {
     return this.movieModel
-      .findById(filmId)
+      .findById(movieId)
       .populate('userId')
       .exec();
   }
 
-  public async increaseCommentCount(
-    filmId: string
-  ): Promise<DocumentType<MovieEntity> | null> {
-    return this.movieModel
-      .findByIdAndUpdate(filmId, {
-        $inc: {
-          commentCount: 1,
-        },
-      })
-      .exec();
-  }
-
   public async updateRating(
-    filmId: string,
+    movieId: string,
     rating: number
   ): Promise<DocumentType<MovieEntity> | null> {
-    return this.movieModel.findByIdAndUpdate(filmId, { rating: rating }).exec();
+    return this.movieModel
+      .findByIdAndUpdate(movieId, {
+        '$inc': {
+          commentCount: 1,
+          rating: rating,
+        }
+      }).exec();
+  }
+
+  public async exists(movieId: string): Promise<boolean> {
+    return this.movieModel
+      .exists({_id: movieId}) !== null;
   }
 }

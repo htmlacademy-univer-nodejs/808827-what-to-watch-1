@@ -17,20 +17,20 @@ export default class CommentService implements CommentServiceInterface {
     const result = await this.commentModel.create(dto);
     this.logger.info(`New comment created: ${dto.text}`);
 
-    return result;
+    return result.populate(['author']);
   }
 
   public async findById(commentId: string): Promise<DocumentType<CommentEntity> | null> {
     return this.commentModel
       .findById(commentId)
-      .populate(['userId'])
+      .populate(['author'])
       .exec();
   }
 
-  public async findCommentsByFilmId(filmId: string): Promise<DocumentType<CommentEntity>[] | null> {
+  public async findCommentsByMovieId(movieId: string): Promise<DocumentType<CommentEntity>[] | null> {
     return this.commentModel
-      .find({films: filmId})
-      .populate(['userId'])
+      .find({movieId})
+      .populate(['author'])
       .exec();
   }
 
@@ -43,8 +43,8 @@ export default class CommentService implements CommentServiceInterface {
     });
   }
 
-  public async delete(filmId: string): Promise<void> {
-    const records = await this.commentModel.find({ filmId: filmId });
+  public async deleteById(movieId: string): Promise<void> {
+    const records = await this.commentModel.find({ movieId });
     for await (const record of records) {
       await this.update(record.id, { deleted: true });
     }
