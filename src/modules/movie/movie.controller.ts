@@ -1,24 +1,24 @@
-import { Request, Response } from "express";
-import { inject, injectable } from "inversify";
-import { Controller } from "../../common/controller/controller.js";
-import { Component } from "../../types/component.types.js";
-import { LoggerInterface } from "../../common/logger/logger.interface.js";
-import { HttpMethod } from "../../types/http-method.enum.js";
-import { MovieServiceInterface } from "./movie-service.interface.js";
-import { CommentServiceInterface } from "../comment/comment-service.interface.js";
-import { StatusCodes } from "http-status-codes";
-import MovieResponse from "./response/movie.response.js";
-import CreateMovieDto from "./dto/create-movie.dto.js";
-import UpdateMovieDto from "./dto/update-movie.dto.js";
-import { fillDTO } from "../../utils/common.js";
-import HttpError from "../../common/errors/http-error.js";
-import { RequestQuery } from "../../types/request-query.js";
-import * as core from "express-serve-static-core";
-import { asGenre } from "../../types/genre.type.js";
-import { ValidateObjectIdMiddleware } from "../../common/middlewares/validate-objectid.middleware.js";
-import { DocumentExistsMiddleware } from "../../common/middlewares/document-exists.middleware.js";
-import { ValidateDtoMiddleware } from "../../common/middlewares/validate-dto.middleware.js";
-import CommentResponse from "../comment/response/comment.response.js";
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+import { Controller } from '../../common/controller/controller.js';
+import { Component } from '../../types/component.types.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { HttpMethod } from '../../types/http-method.enum.js';
+import { MovieServiceInterface } from './movie-service.interface.js';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import { StatusCodes } from 'http-status-codes';
+import MovieResponse from './response/movie.response.js';
+import CreateMovieDto from './dto/create-movie.dto.js';
+import UpdateMovieDto from './dto/update-movie.dto.js';
+import { fillDTO } from '../../utils/common.js';
+import HttpError from '../../common/errors/http-error.js';
+import { RequestQuery } from '../../types/request-query.js';
+import * as core from 'express-serve-static-core';
+import { asGenre } from '../../types/genre.type.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
+import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
+import CommentResponse from '../comment/response/comment.response.js';
 
 @injectable()
 export default class MovieController extends Controller {
@@ -31,65 +31,65 @@ export default class MovieController extends Controller {
   ) {
     super(logger);
 
-    this.logger.info("Register routes for MovieController");
+    this.logger.info('Register routes for MovieController');
 
     this.addRoute({
-      path: "/",
+      path: '/',
       method: HttpMethod.Get,
       handler: this.index,
     });
     this.addRoute({
-      path: "/",
+      path: '/',
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [new ValidateDtoMiddleware(CreateMovieDto)],
     });
     this.addRoute({
-      path: "/promo",
+      path: '/promo',
       method: HttpMethod.Get,
       handler: this.getPromo,
       middlewares: [
-        new DocumentExistsMiddleware(this.movieService, "Movie", "movieId"),
+        new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
     this.addRoute({
-      path: "/:movieId",
+      path: '/:movieId',
       method: HttpMethod.Get,
       handler: this.show,
       middlewares: [
-        new ValidateObjectIdMiddleware("filmId"),
-        new DocumentExistsMiddleware(this.movieService, "Movie", "movieId"),
+        new ValidateObjectIdMiddleware('filmId'),
+        new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
     this.addRoute({
-      path: "/:movieId",
+      path: '/:movieId',
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
-        new ValidateObjectIdMiddleware("movieId"),
-        new DocumentExistsMiddleware(this.movieService, "Movie", "movieId"),
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
     this.addRoute({
-      path: "/:movieId",
+      path: '/:movieId',
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
-        new ValidateObjectIdMiddleware("movieId"),
-        new DocumentExistsMiddleware(this.movieService, "Movie", "movieId"),
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
     this.addRoute({
-      path: "/:movieId/comments",
+      path: '/:movieId/comments',
       method: HttpMethod.Get,
       handler: this.getComments,
       middlewares: [
-        new ValidateObjectIdMiddleware("movieId"),
-        new DocumentExistsMiddleware(this.movieService, "Movie", "movieId"),
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
     this.addRoute({
-      path: "/genre/:genre",
+      path: '/genre/:genre',
       method: HttpMethod.Get,
       handler: this.getByGenre,
     });
@@ -99,7 +99,7 @@ export default class MovieController extends Controller {
     { query }: Request<core.ParamsDictionary, unknown, unknown, RequestQuery>,
     res: Response
   ): Promise<void> {
-    const limit = parseInt(query.limit ?? "0", 10) || 4;
+    const limit = parseInt(query.limit ?? '0', 10) || 4;
     const films = await this.movieService.find(limit);
     console.log(limit, films, fillDTO(MovieResponse, films));
     this.ok(res, fillDTO(MovieResponse, films));
@@ -121,7 +121,7 @@ export default class MovieController extends Controller {
       throw new HttpError(
         StatusCodes.CONFLICT,
         `Film with title «${body.title}» exists.`,
-        "FilmController"
+        'FilmController'
       );
     }
 
@@ -130,7 +130,7 @@ export default class MovieController extends Controller {
       throw new HttpError(
         StatusCodes.FORBIDDEN,
         `Film with title «${body.title}» is not created.`,
-        "FilmController"
+        'FilmController'
       );
     }
     this.created(res, fillDTO(MovieResponse, result));
@@ -157,7 +157,7 @@ export default class MovieController extends Controller {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Movie with genre ${genre} does not exist`,
-        "MovieController"
+        'MovieController'
       );
     }
 
