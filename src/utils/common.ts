@@ -1,4 +1,6 @@
 import { asGenre } from '../types/genre.type.js';
+import { plainToInstance } from 'class-transformer';
+import { ClassConstructor } from 'class-transformer/types/interfaces/class-constructor.type.js';
 import crypto from 'crypto';
 
 export const createMovie = (row: string) => {
@@ -41,7 +43,7 @@ export const createMovie = (row: string) => {
       name: username,
       email,
       profilePictureLink,
-      password
+      password,
     },
     posterLink,
     backgroundPictureLink,
@@ -60,4 +62,14 @@ export const createSHA256 = (line: string, salt: string): string => {
 
 export function isPasswordValid(password: string): boolean {
   return password.length >= 6 && password.length <= 12;
+}
+
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
+}
+
+export function createErrorObject(message: string) {
+  return ({
+    error: message,
+  });
 }
