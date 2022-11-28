@@ -12,6 +12,8 @@ import { fillDTO } from '../../utils/common.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import { ConfigInterface } from '../../common/config/config.interface.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -36,16 +38,25 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
     });
-    // this.addRoute({
-    //   path: '/login',
-    //   method: HttpMethod.Get,
-    //   handler: this.authCheck,
-    // });
-    // this.addRoute({
-    //   path: '/logout',
-    //   method: HttpMethod.Delete,
-    //   handler: this.logout,
-    // });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.authCheck,
+    });
+    this.addRoute({
+      path: '/logout',
+      method: HttpMethod.Delete,
+      handler: this.logout,
+    });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+      ]
+    });
   }
 
   public async login(
@@ -93,19 +104,25 @@ export default class UserController extends Controller {
     this.created(res, fillDTO(UserResponse, result));
   }
 
-  // public async logout(): Promise<void> {
-  //   throw new HttpError(
-  //     StatusCodes.NOT_IMPLEMENTED,
-  //     'This service (LOGOUT) not implemented',
-  //     'userController'
-  //   );
-  // }
+  public async logout(): Promise<void> {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'This service (LOGOUT) not implemented',
+      'userController'
+    );
+  }
 
-  // public async authCheck(): Promise<void> {
-  //   throw new HttpError(
-  //     StatusCodes.NOT_IMPLEMENTED,
-  //     'This service (authCheck) not implemented',
-  //     'userController'
-  //   );
-  // }
+  public async authCheck(): Promise<void> {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'This service (authCheck) not implemented',
+      'userController'
+    );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
+  }
 }
