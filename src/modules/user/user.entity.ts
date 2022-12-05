@@ -12,9 +12,9 @@ export interface UserEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
-    collection: 'users',
+  collection: 'users',
   },
-})
+  })
 export class UserEntity extends defaultClasses.TimeStamps implements User {
   constructor(data: User) {
     super();
@@ -42,6 +42,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     } else {
       throw new Error('Password length is not correct');
     }
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hashPassword = createSHA256(password, salt);
+    return hashPassword === this.password;
   }
 
   public getPassword() {

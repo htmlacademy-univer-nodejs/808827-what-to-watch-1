@@ -8,9 +8,9 @@ export interface CommentEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
-    collection: 'comments'
+  collection: 'comments'
   }
-})
+  })
 
 export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({trim: true, required: true})
@@ -22,13 +22,13 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({
     ref: UserEntity,
     required: true
-  })
+    })
   public author!: Ref<UserEntity>;
 
   @prop({
     ref: MovieEntity,
     required: true
-  })
+    })
   public movieId!: Ref<MovieEntity>;
 }
 

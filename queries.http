@@ -19,8 +19,15 @@ Content-Type: application/json
 
 {
   "email": "torans@overlook.net",
-  "password": "123"
+  "password": "shining"
 }
+
+###
+## Проверка токена пользователя
+GET http://localhost:4200/users/login HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY2OTYzMDAwMSwiZXhwIjoxNjY5ODAyODAxfQ.P7uNG_Jge-nuA1txwE7AuzFQ48ZbYXxAktG9-W0XQzM
+
+###
 
 ###
 POST http://localhost:4200/comments HTTP/1.1
@@ -50,3 +57,4 @@ Content-Type: image/jpg
 
 F:\NaNe\potapov\avatar.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
