@@ -2,6 +2,7 @@ import { asGenre } from '../types/genre.type.js';
 import { plainToInstance } from 'class-transformer';
 import { ClassConstructor } from 'class-transformer/types/interfaces/class-constructor.type.js';
 import crypto from 'crypto';
+import * as jose from 'jose';
 
 export const createMovie = (row: string) => {
   const tokens = row.replace('\n', '').split('\t');
@@ -65,11 +66,24 @@ export function isPasswordValid(password: string): boolean {
 }
 
 export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
-  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
+  return plainToInstance(someDto, plainObject, {
+    excludeExtraneousValues: true,
+  });
 }
 
 export function createErrorObject(message: string) {
-  return ({
+  return {
     error: message,
-  });
+  };
 }
+
+export const createJWT = async (
+  algoritm: string,
+  jwtSecret: string,
+  payload: object
+): Promise<string> =>
+  new jose.SignJWT({ ...payload })
+    .setProtectedHeader({ alg: algoritm })
+    .setIssuedAt()
+    .setExpirationTime('2d')
+    .sign(crypto.createSecretKey(jwtSecret, 'utf-8'));

@@ -8,9 +8,9 @@ export interface MovieEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
-    collection: 'movies'
+  collection: 'movies'
   }
-})
+  })
 export class MovieEntity extends defaultClasses.TimeStamps {
   @prop({trim: true, required: true, minlength: 2, maxlength: 100})
   public title!: string;
@@ -25,7 +25,7 @@ export class MovieEntity extends defaultClasses.TimeStamps {
     type: () => String,
     required: true,
     enum: genres
-  })
+    })
   public genre!: Genre;
 
   @prop({required: true})
@@ -55,7 +55,7 @@ export class MovieEntity extends defaultClasses.TimeStamps {
   @prop({
     ref: UserEntity,
     required: true
-  })
+    })
   public userId!: Ref<UserEntity>;
 
   @prop({required: true, match: /([^\s]+(\.jpg)$)/})
