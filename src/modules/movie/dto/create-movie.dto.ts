@@ -8,7 +8,6 @@ import {
   IsMongoId,
   MaxLength,
   MinLength,
-  Contains
 } from 'class-validator';
 
 export default class CreateMovieDto {
@@ -32,10 +31,8 @@ export default class CreateMovieDto {
   @IsNumber({},{message: 'Rating must be a number'})
   public rating!: number;
 
-  @IsString({message: 'Preview must be an string'})
   public videoPreviewLink!: string;
 
-  @IsString({message: 'Video must be an string'})
   public videoLink!: string;
 
   @IsArray({message: 'Field actors must be an array'})
@@ -56,10 +53,8 @@ export default class CreateMovieDto {
   @IsMongoId({message: 'userId field must be valid an id'})
   public userId!: string;
 
-  @Contains('.jpg',{message: 'Poster should be with the extension .jpg'})
   public posterLink!: string;
 
-  @Contains('.jpg',{message: 'Background should be with the extension .jpg'})
   public backgroundPictureLink!: string;
 
   @IsString({message: 'Background color must be an string'})

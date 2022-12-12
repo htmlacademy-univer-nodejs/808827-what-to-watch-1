@@ -33,6 +33,13 @@ export default class MovieService implements MovieServiceInterface {
       .exec();
   }
 
+  public async updateImageById(movieId: string, newFile: object): Promise<DocumentType<MovieEntity> | null> {
+    return this.movieModel
+      .findByIdAndUpdate(movieId, newFile, {new: true})
+      .populate('userId')
+      .exec();
+  }
+
   public async deleteById(
     movieId: string
   ): Promise<DocumentType<MovieEntity> | null> {

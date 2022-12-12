@@ -4,7 +4,7 @@ import multer, {diskStorage} from 'multer';
 import mime from 'mime-types';
 import {MiddlewareInterface} from '../../types/middleware.interface.js';
 
-const nanoid = customAlphabet('1234567890', 6);
+const nanoid = customAlphabet('1234567890', 10);
 
 export class UploadFileMiddleware implements MiddlewareInterface {
   constructor(

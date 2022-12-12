@@ -14,8 +14,9 @@ import LoginUserDto from './dto/login-user.dto.js';
 import { ConfigInterface } from '../../common/config/config.interface.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
-import { JWT_ALGORITHM } from './user.constant.js';
+import { DEFAULT_AVATAR_FILE_NAME, JWT_ALGORITHM } from './user.constant.js';
 import LoggedUserResponse from './response/logged-user-response.js';
+import UploadUserAvatarResponse from './response/upload-user-avatar.response.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -24,9 +25,9 @@ export default class UserController extends Controller {
     @inject(Component.UserServiceInterface)
     private readonly userService: UserServiceInterface,
     @inject(Component.ConfigInterface)
-    private readonly configService: ConfigInterface,
+    configService: ConfigInterface
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for UserService…');
 
@@ -56,8 +57,11 @@ export default class UserController extends Controller {
       handler: this.uploadAvatar,
       middlewares: [
         new ValidateObjectIdMiddleware('userId'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
-      ]
+        new UploadFileMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          'avatar'
+        ),
+      ],
     });
   }
 
@@ -67,7 +71,10 @@ export default class UserController extends Controller {
     }: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     res: Response
   ): Promise<void> {
-    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
+    const user = await this.userService.verifyUser(
+      body,
+      this.configService.get('SALT')
+    );
 
     if (!user) {
       throw new HttpError(
@@ -79,10 +86,10 @@ export default class UserController extends Controller {
     const token = await createJWT(
       JWT_ALGORITHM,
       this.configService.get('JWT_SECRET'),
-      { email: user.email, id: user.id}
+      { email: user.email, id: user.id }
     );
 
-    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
+    this.ok(res, { ...fillDTO(LoggedUserResponse, user), token });
   }
 
   public async create(
@@ -102,7 +109,11 @@ export default class UserController extends Controller {
     }
 
     const result = await this.userService.create(
-      body,
+      {
+        ...body,
+        profilePictureLink: DEFAULT_AVATAR_FILE_NAME,
+      },
+
       this.configService.get('SALT')
     );
     this.created(res, fillDTO(UserResponse, result));
@@ -117,14 +128,22 @@ export default class UserController extends Controller {
   }
 
   public async authCheck(req: Request, res: Response) {
+    if (!req.user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
     const user = await this.userService.findByEmail(req.user.email);
 
     this.ok(res, fillDTO(LoggedUserResponse, user));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+    const {userId} = req.params;
+    const uploadFile = {profilePictureLink: req.file?.filename};
+    await this.userService.updateById(userId, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadFile));
   }
 }

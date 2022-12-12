@@ -19,17 +19,21 @@ import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-ob
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import CommentResponse from '../comment/response/comment.response.js';
+import { ConfigInterface } from '../../common/config/config.interface.js';
+import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 
 @injectable()
 export default class MovieController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
     @inject(Component.MovieServiceInterface)
     private readonly movieService: MovieServiceInterface,
     @inject(Component.CommentServiceInterface)
     private commentService: CommentServiceInterface
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for MovieController');
 
@@ -77,6 +81,42 @@ export default class MovieController extends Controller {
       middlewares: [
         new ValidateObjectIdMiddleware('movieId'),
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
+      ],
+    });
+    this.addRoute({
+      path: '/:movieId/preview',
+      method: HttpMethod.Post,
+      handler: this.upload,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'preview'),
+      ],
+    });
+    this.addRoute({
+      path: '/:movieId/poster',
+      method: HttpMethod.Post,
+      handler: this.upload,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'poster'),
+      ],
+    });
+    this.addRoute({
+      path: '/:movieId/bg',
+      method: HttpMethod.Post,
+      handler: this.upload,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'backgroundImage'),
+      ],
+    });
+    this.addRoute({
+      path: '/:movieId/video',
+      method: HttpMethod.Post,
+      handler: this.upload,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'video'),
       ],
     });
     this.addRoute({
@@ -206,5 +246,16 @@ export default class MovieController extends Controller {
 
     const comments = await this.commentService.findCommentsByMovieId(movieId);
     this.ok(res, fillDTO(CommentResponse, comments));
+  }
+
+  public async upload(req: Request, res: Response) {
+    const {movieId} = req.params;
+    if (!req.file) {
+      return;
+    }
+    const updateDTO = {[req.file.fieldname] : req.file.filename};
+    await this.movieService.updateImageById(movieId, updateDTO);
+
+    this.created(res, updateDTO);
   }
 }
