@@ -7,18 +7,19 @@ info:
     url: https://opensource.org/licenses/MIT
   version: '1.0.0'
 tags:
-  - name: films
+  - name: movies
     description: Действия с фильмами.
   - name: comments
     description: Действия с комментариями.
   - name: users
     description: Действия с пользователем.
+  - name: favorites
+    description: Действия со списком "К просмотру".
 paths:
-  /films:
+  /movies:
     post:
       tags:
-        - films
-      operationId: addNewFilm
+        - movies
       summary: Добавление фильма
       description: Добавление новой карточки с фильмом
       requestBody:
@@ -26,28 +27,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/addNewFilm'
+              $ref: '#/components/schemas/createMovie'
         required: true
       responses:
-        '200':
+        '201':
           description: Новая карточка фильма добавлена
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
     get:
       tags:
-        - films
-      operationId: getFilms
+        - movies
       summary: Получение фильмов
       description: Получение списка фильмов
-      parameters:
-          - in: query
-            name: genre
-            schema:
-              type: string
-              enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
-            description: Жанр фильмов для получения списка
       responses:
         '200':
           description: Список фильмов получен
@@ -56,17 +49,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/film'
-  /films/{filmId}:
+                  $ref: '#/components/schemas/movie'
+
+  /movies/{movieId}:
     get:
       tags:
-        - films
-      operationId: getFilmById
+        - movies
       summary: Получение данных фильма
       description: Получение детальной информации по фильму
       parameters:
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
           required: true
@@ -78,33 +71,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
     delete:
       tags:
-        - films
-      operationId: deleteFilm
+        - movies
       summary: Удаление фильма
       description: Удаление карточки фильма
       parameters:
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
           required: true
           description: Идентификатор фильма
           example: aaa123
       responses:
-        '200':
+        '204':
           description: Фильм удален
-    put:
+    patch:
       tags:
-        - films
-      operationId: editFilm
+        - movies
       summary: Изменить фильм
       description: Редактирование карточки фильма
       parameters:
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
           required: true
@@ -115,15 +106,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/addNewFilm'
+              $ref: '#/components/schemas/createMovie'
       responses:
         '200':
           description: Фильм изменен
-  /films/promo:
+
+  /movies/promo:
     get:
       tags:
-        - films
-      operationId: getPromoFilm
+        - movies
       summary: Получение промо-фильма
       description: Получение промо-фильма
       responses:
@@ -132,97 +123,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
-  /films/favourites:
+                $ref: '#/components/schemas/movie'
+
+  /movies/genre/{genre}:
     get:
       tags:
-        - films
-      operationId: getFavouritesFilms
-      summary: Получение фильмов к просмотру
-      description: Получить список фильмов «К просмотру»
+        - movies
+      summary: Получение фильмов по жанру
+      description: Получение фильмов по жанру
       responses:
         '200':
-          description: Список фильмов «К просмотру» получен
+          description: Список фильмов по жанру получен
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/film'
-  /films/{filmId}/{toWatch}:
-    post:
-      tags:
-        - films
-      operationId: setToWatchStatus
-      summary: Получение данных фильма
-      description: Получение детальной информации по фильму
-      parameters:
-        - in: path
-          name: filmId
-          required: true
-          schema:
-            type: string
-          description: Идентификатор фильма
-          example: aaa123
-        - in: path
-          name: toWatch
-          required: true
-          schema:
-              type: number
-              enum: [0, 1]
-          description: Статус фильма. Может быть 1 или 0, где 1 добавляет фильма в список «к просмотру», а 0 удаляет
-          example: 1
-      responses:
-        '200':
-          description: Данные фильма получены
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/film'
+                  $ref: '#/components/schemas/movie'
 
-  /films/{filmId}/comments:
+  /movies/{movieId}/comments:
     get:
       tags:
         - comments
       summary: Комментарии к фильму
       description: Получить список комментариев для определённого фильма
-      parameters:
-        - in: path
-          name: filmId
-          schema:
-            type: string
-          required: true
-          description: Идентификатор фильма
-          example: aaa123
-      responses:
-        '200':
-          description: Комментарии для фильма получены
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/comment'
-    post:
-      tags:
-        - comments
-      summary: Добавить комментарий
-      description: Добавить новый комментарий к определённому фильму
-      parameters:
-        - in: path
-          name: filmId
-          schema:
-            type: string
-          required: true
-          description: Идентификатор фильма
-          example: aaa123
-      requestBody:
-        required: true
-        description: Данные для добавления комментария
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/addComment'
       responses:
         '200':
           description: Комментарии для фильма получены
@@ -233,7 +157,64 @@ paths:
                 items:
                   $ref: '#/components/schemas/comment'
 
-  /users:
+  /movies/{movieId}/video:
+    get:
+      tags:
+        - comments
+      summary: Загрузка видео фильма
+      description: Загрузить видео фильма
+      responses:
+        "201":
+          description: Загружено видео фильма.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+
+  /movies/{movieId}/bg:
+    get:
+      tags:
+        - comments
+      summary: Загрузка заднего фона фильма
+      description: Загрузить задний фон фильма
+      responses:
+        "201":
+          description: Загружен задний фон фильма.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+
+  /movies/{movieId}/poster:
+    get:
+      tags:
+        - comments
+      summary: Загрузка постера фильма
+      description: Загрузить постер фильма
+      responses:
+        "201":
+          description: Загружен постер фильма.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+
+  /movies/{movieId}/preview:
+    get:
+      tags:
+        - comments
+      summary: Загрузка превью фильма
+      description: Загрузить превью фильма
+      responses:
+        "201":
+          description: Загружено превью фильма.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+    
+
+  /users/register:
     post:
       tags:
         - users
@@ -256,7 +237,7 @@ paths:
         '409':
           description: Пользователь с таким email уже существует.
 
-  /login:
+  /users/login:
     post:
       tags:
         - users
@@ -276,7 +257,7 @@ paths:
                   type: string
                   format: password
       responses:
-        '200':
+        '201':
           description: Пользователь создан
           content:
             application/json:
@@ -289,25 +270,92 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
       responses:
         '200':
-          description: Пользователь создан
+          description: Возвращает информацию по авторизованному пользователю
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
 
-  /logout:
-    delete:
+  /users/{userId}/avatar:
+    post:
       tags:
         - users
-      summary: Завершить сеанс
-      description: Завершает сеанс пользователя
+      summary: Загрузить изображение аватара пользователя.
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате '.png' или '.jpg'.
+
+      responses:
+        "201":
+          description: Загружено изображение аватара пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+
+
+  /favorites:
+    get:
+      tags:
+        - favorites
+      summary: Получение фильмов к просмотру
+      description: Получить список фильмов «К просмотру»
+      responses:
+        '200':
+          description: Список фильмов «К просмотру» получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+    post:
+      tags:
+        - favorites
+      summary: Добавление фильма в список "К просмотру"
+      description: Добавление фильма в список "К просмотру"
+      responses:
+        '200':
+          description: Фильм добавлен в список "К просмотру"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+    delete:
+      tags:
+        - favorites
+      summary: Удаление фильма из списка "К просмотру"
+      description: Удаление фильма из списка "К просмотру"
       responses:
         '204':
-          description: Сеанс завершен
+          description: Фильм удален из списка "К просмотру"
+
+  /comments:
+    post:
+      tags:
+        - comments
+      summary: Добавить комментарий
+      description: Добавить новый комментарий к определённому фильму
+      requestBody:
+        required: true
+        description: Данные для добавления комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+      responses:
+        '201':
+          description: Создан комментарий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
 
 components:
   schemas:
-    film:
+    movie:
       type: object
       properties:
         id:
@@ -317,45 +365,45 @@ components:
           type: string
         description:
           type: string
-        postDate:
+        publicationDate:
           type: string
           format: date
         genre:
           type: string
           enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
-        year:
+        createdYear:
           type: integer
         rating:
           type: number
-        videoPreview:
+        videoPreviewLink:
           type: string
           format: uri
-        video:
+        videoLink:
           type: string
           format: uri
-        starring:
+        actors:
           type: array
           items:
             type: string
         director:
           type: string
-        runTime:
+        movieDuration:
           type: integer
-        commentsCount:
+        commentAmount:
           type: integer
-        user:
+        userId:
           $ref: '#/components/schemas/user'
-        posterImage:
+        posterLink:
           type: string
           format: uri
-        backgroundImage:
+        backgroundPictureLink:
           type: string
           format: uri
         backgroundColor:
           type: string
           format: uri
 
-    addNewFilm:
+    createMovie:
       type: object
       properties:
           title:
@@ -366,22 +414,22 @@ components:
             type: string
             minLength: 20
             maxLength: 1024
-          postDate:
+          publicationDate:
             type: string
             format: date
           genre:
             type: string
             enum: [comedy, crime, documentary, drama, horror, family, romance, scifi, thriller]
-          year:
+          createdYear:
             type: integer
             minimum: 1880
-          videoPreview:
+          videoPreviewLink:
             type: string
             format: uri
-          video:
+          videoLink:
             type: string
             format: uri
-          starring:
+          actors:
             type: array
             items:
               type: string
@@ -389,12 +437,16 @@ components:
             type: string
             minLength: 2
             maxLength: 50
-          runTime:
+          movieDuration:
             type: integer
-          posterImage:
+          commentAmount:
+            type: number
+          userId:
+            type: string
+          posterLink:
             type: string
             format: uri
-          backgroundImage:
+          backgroundPictureLink:
             type: string
             format: uri
           backgroundColor:
@@ -418,7 +470,7 @@ components:
         author:
           $ref: '#/components/schemas/user'
 
-    addComment:
+    createComment:
       type: object
       properties:
         text:
@@ -427,6 +479,8 @@ components:
           type: integer
           minimum: 1
           maximum: 10
+        author:
+          type: string
         date:
           type: string
           format: date-time
@@ -444,15 +498,12 @@ components:
     createUser:
       type: object
       properties:
+        name:
+          type: string
+          example: Keks
         email:
           type: string
           example: keks@htmlacademy.ru
-        firstname:
-          type: string
-          example: Keks
-        lastname:
-          type: string
-          example: Cat
         password:
           type: string
           example: qwerty123

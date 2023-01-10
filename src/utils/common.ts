@@ -127,8 +127,11 @@ export const transformObject = (
 ) => {
   properties.forEach((property) =>
     transformProperty(property, data, (target: UnknownObject) => {
+      if (!target[property]) {
+        throw new Error();
+      }
       const rootPath = DEFAULT_STATIC_IMAGES.includes(
-        target[property] as string
+        String(target[property])
       )
         ? staticPath
         : uploadPath;

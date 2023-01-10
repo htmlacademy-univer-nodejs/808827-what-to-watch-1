@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
 import express, { Express } from 'express';
+import cors from 'cors';
 import { Component } from '../types/component.types.js';
 import { getURI } from '../utils/db.js';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
@@ -26,6 +27,7 @@ export default class Application {
     @inject(Component.ExceptionFilterInterface)
     private exceptionFilter: ExceptionFilterInterface,
     @inject(Component.CommentController) private commentController: ControllerInterface,
+    @inject(Component.FavoriteController) private favoriteController: ControllerInterface,
   ) {
     this.expressApp = express();
   }
@@ -34,6 +36,7 @@ export default class Application {
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/movies', this.movieController.router);
     this.expressApp.use('/comments', this.commentController.router);
+    this.expressApp.use('/favorites', this.favoriteController.router);
   }
 
   public initMiddleware() {
@@ -48,6 +51,7 @@ export default class Application {
     );
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
     this.expressApp.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.expressApp.use(cors());
   }
 
 

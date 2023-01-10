@@ -17,6 +17,7 @@ import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middl
 import { DEFAULT_AVATAR_FILE_NAME, JWT_ALGORITHM } from './user.constant.js';
 import LoggedUserResponse from './response/logged-user-response.js';
 import UploadUserAvatarResponse from './response/upload-user-avatar.response.js';
+import { FavoriteServiceInterface } from '../favorite/favorite-service.interface.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -25,7 +26,8 @@ export default class UserController extends Controller {
     @inject(Component.UserServiceInterface)
     private readonly userService: UserServiceInterface,
     @inject(Component.ConfigInterface)
-    configService: ConfigInterface
+    configService: ConfigInterface,
+    @inject(Component.FavoriteServiceInterface) private readonly favoriteService: FavoriteServiceInterface,
   ) {
     super(logger, configService);
 
@@ -45,11 +47,6 @@ export default class UserController extends Controller {
       path: '/login',
       method: HttpMethod.Get,
       handler: this.authCheck,
-    });
-    this.addRoute({
-      path: '/logout',
-      method: HttpMethod.Delete,
-      handler: this.logout,
     });
     this.addRoute({
       path: '/:userId/avatar',
@@ -116,15 +113,8 @@ export default class UserController extends Controller {
 
       this.configService.get('SALT')
     );
+    await this.favoriteService.create(result.id);
     this.created(res, fillDTO(UserResponse, result));
-  }
-
-  public async logout(): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'This service (LOGOUT) not implemented',
-      'userController'
-    );
   }
 
   public async authCheck(req: Request, res: Response) {

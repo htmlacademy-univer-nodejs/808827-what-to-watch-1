@@ -50,7 +50,7 @@ export default class CreateMovieDto {
   @IsInt({message: 'Comment count must be an integer'})
   public commentAmount!: number;
 
-  @IsMongoId({message: 'userId field must be valid an id'})
+  @IsMongoId({message: 'userId field must be a valid id'})
   public userId!: string;
 
   public posterLink!: string;

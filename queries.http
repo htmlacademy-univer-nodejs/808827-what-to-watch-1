@@ -29,6 +29,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ###
 
+DELETE http://localhost:4200/users/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzI5MTUxOSwiZXhwIjoxNjczNDY0MzE5fQ.OuCx_QFTnY8OwqtDP6CgKUHUNJU2jGVbii1SKksJIe4
+###
+
 ###
 POST http://localhost:4200/comments HTTP/1.1
 Content-Type: application/json
@@ -48,13 +52,105 @@ GET http://localhost:4200/movies/6352ad1e45a88ec5bc632294/comments HTTP/1.1
 
 ## Отправка аватарки пользователю
 
-POST http://localhost:4200/users/634971d0351d0b51b90a0040/avatar HTTP/1.1
+POST http://localhost:4200/users/637b54abc953d3477988d6c3/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="avatar"; filename="avatar.jpg"
-Content-Type: image/jpg
+Content-Disposition: form-data; name="avatar"; filename="48080.png"
+Content-Type: image/png
 
-F:\NaNe\potapov\avatar.jpg
+F:\NaNe\48080.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+###
+## Создать фильм
+POST http://localhost:4200/movies HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzI4Mzc4NCwiZXhwIjoxNjczNDU2NTg0fQ._M_swxRufFKB4nAQFzx3RSnj1UVxJ9bUbPaK5vNOVgY
+
+{
+  "title": "Брат 2",
+  "description": "Американцы знакомятся с Данилой Багровым и узнают, в чем сила. Сиквел о герое времени с мощным рок-саундтреком",
+  "publicationDate": "2000-10-09T14:21:56.782Z",
+  "genre": "crime",
+  "createdYear": 2000,
+  "rating": 8.2,
+  "videoPreviewLink": "brat-2.jpg",
+  "videoLink": "brat-2.mpeg4",
+  "actors": [
+    "Сергей Бодров",
+    "Виктор Сухоруков",
+    "Сергей Маковецкий"
+  ],
+  "director": "Алексей Балабанов",
+  "movieDuration": 127,
+  "commentAmount": 100500,
+  "userId": "637b54abc953d3477988d6c3",
+  "posterLink": "brat-2-poster.jpg",
+  "backgroundPictureLink": "brat-2-background.jpg",
+  "backgroundColor": "#C53F37"
+}
+
+###
+## Обновление фильма
+PATCH http://localhost:4200/movies/63bc4b2a046af08505af22c9 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzI4Mzc4NCwiZXhwIjoxNjczNDU2NTg0fQ._M_swxRufFKB4nAQFzx3RSnj1UVxJ9bUbPaK5vNOVgY
+
+{
+  "title": "Брат 2",
+  "description": "Проверка обновления"
+}
+
+###
+## Удалить фильм
+DELETE http://localhost:4200/movies/63bc5013046af08505af22e1 HTTP/1.1
+Content-Type: application/json
+
+###
+## Получение списка фильмов
+GET http://localhost:4200/movies HTTP/1.1
+Content-Type: application/json
+
+###
+## Получение списка фильмов определённого жанра
+GET http://localhost:4200/movies/genre/crime HTTP/1.1
+Content-Type: application/json
+
+###
+## Получение фильма по id
+GET http://localhost:4200/movies/63bc53c2046af08505af22f5 HTTP/1.1
+Content-Type: application/json
+
+###
+## Получение промо-фильма
+GET http://localhost:4200/movies/promo HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Избранное
+## Добавить фильм в избранное
+POST http://localhost:4200/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzM0NTQyMCwiZXhwIjoxNjczNTE4MjIwfQ.UwHN8NYFVGkN-fgoDcX058gmTpwt3lp65QKndDocfo0
+
+{
+  "movieId": "6352ad1e45a88ec5bc632297"
+}
+
+###
+## Получить список избранного у пользователя
+GET http://localhost:4200/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzM0NTQyMCwiZXhwIjoxNjczNTE4MjIwfQ.UwHN8NYFVGkN-fgoDcX058gmTpwt3lp65QKndDocfo0
+
+###
+## Удалить выбранный фильм из избранного
+DELETE http://localhost:4200/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzM0NTQyMCwiZXhwIjoxNjczNTE4MjIwfQ.UwHN8NYFVGkN-fgoDcX058gmTpwt3lp65QKndDocfo0
+
+{
+  "movieId": "6352ad1e45a88ec5bc632294"
+}
