@@ -61,7 +61,7 @@ export default class MovieController extends Controller {
       method: HttpMethod.Get,
       handler: this.show,
       middlewares: [
-        new ValidateObjectIdMiddleware('filmId'),
+        new ValidateObjectIdMiddleware('movieId'),
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
@@ -192,6 +192,8 @@ export default class MovieController extends Controller {
   ): Promise<void> {
     const {genre} = params;
     const result = await this.movieService.findByGenre(asGenre(params.genre));
+    console.log(fillDTO(MovieResponse, result));
+
 
     if (!result) {
       throw new HttpError(
@@ -245,6 +247,7 @@ export default class MovieController extends Controller {
     const {movieId} = params;
 
     const comments = await this.commentService.findCommentsByMovieId(movieId);
+    console.log(fillDTO(CommentResponse, comments));
     this.ok(res, fillDTO(CommentResponse, comments));
   }
 

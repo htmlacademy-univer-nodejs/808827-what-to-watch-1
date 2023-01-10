@@ -24,6 +24,10 @@ import ExceptionFilter from './common/errors/exception-filter.js';
 import MovieController from './modules/movie/movie.controller.js';
 import UserController from './modules/user/user.controller.js';
 import CommentController from './modules/comment/comment.controller.js';
+import { FavoriteServiceInterface } from './modules/favorite/favorite-service.interface.js';
+import { FavoriteEntity, FavoriteModel } from './modules/favorite/favorite.entity.js';
+import FavoriteService from './modules/favorite/favorite.service.js';
+import FavoriteController from './modules/favorite/favorite.controller.js';
 
 const applicationContainer = new Container();
 applicationContainer.bind<Application>(Component.Application).to(Application).inSingletonScope();
@@ -40,6 +44,9 @@ applicationContainer.bind<ControllerInterface>(Component.UserController).to(User
 applicationContainer.bind<ControllerInterface>(Component.MovieController).to(MovieController).inSingletonScope();
 applicationContainer.bind<ExceptionFilterInterface>(Component.ExceptionFilterInterface).to(ExceptionFilter).inSingletonScope();
 applicationContainer.bind<ControllerInterface>(Component.CommentController).to(CommentController).inSingletonScope();
+applicationContainer.bind<FavoriteServiceInterface>(Component.FavoriteServiceInterface).to(FavoriteService);
+applicationContainer.bind<types.ModelType<FavoriteEntity>>(Component.FavoriteModel).toConstantValue(FavoriteModel);
+applicationContainer.bind<ControllerInterface>(Component.FavoriteController).to(FavoriteController).inSingletonScope();
 
 const application = applicationContainer.get<Application>(Component.Application);
 await application.init();
