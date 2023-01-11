@@ -127,6 +127,7 @@ export const transformObject = (
 ) => {
   properties.forEach((property) =>
     transformProperty(property, data, (target: UnknownObject) => {
+      console.log(target[property], target, property, properties)
       if (!target[property]) {
         throw new Error();
       }

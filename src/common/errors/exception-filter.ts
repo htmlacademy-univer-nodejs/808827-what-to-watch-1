@@ -59,6 +59,7 @@ export default class ExceptionFilter implements ExceptionFilterInterface {
     res: Response,
     _next: NextFunction
   ) {
+    // console.log(error, res)
     this.logger.error(error.message);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

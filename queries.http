@@ -31,9 +31,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 ###
 POST http://localhost:4200/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzQyOTQ5NiwiZXhwIjoxNjczNjAyMjk2fQ.Nb5txUB04c9GQBRLl2wZD_r8GE39fWePaugWJyK5-1s
 
 {
-  "text": "1235678",
+  "text": "123567898",
   "rating": 9,
   "author": "637b54abc953d3477988d6c3",
   "movieId": "6352ad1e45a88ec5bc632294"
@@ -54,7 +55,7 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 Content-Disposition: form-data; name="avatar"; filename="48080.png"
 Content-Type: image/png
 
-F:\NaNe\48080.png
+< F:\NaNe\48080.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###
@@ -131,7 +132,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjYzN2I1NGFiYzk1M2QzNDc3OTg4ZDZjMyIsImlhdCI6MTY3MzM0NTQyMCwiZXhwIjoxNjczNTE4MjIwfQ.UwHN8NYFVGkN-fgoDcX058gmTpwt3lp65QKndDocfo0
 
 {
-  "movieId": "6352ad1e45a88ec5bc632297"
+  "movieId": "6352ad1e45a88ec5bc632294"
 }
 
 ###

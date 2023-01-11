@@ -20,7 +20,6 @@ export default class FavoriteService implements FavoriteServiceInterface {
 
   public async pushToFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity> | null> {
     const {userId, movieId} = dto;
-    console.log(userId, movieId);
     return this.favoriteModel
       .findOneAndUpdate({userId}, {
         '$addToSet': {
