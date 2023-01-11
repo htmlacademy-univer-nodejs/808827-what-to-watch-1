@@ -31,7 +31,7 @@ export default class MovieController extends Controller {
     @inject(Component.MovieServiceInterface)
     private readonly movieService: MovieServiceInterface,
     @inject(Component.CommentServiceInterface)
-    private commentService: CommentServiceInterface
+    private readonly commentService: CommentServiceInterface
   ) {
     super(logger, configService);
 
@@ -140,9 +140,8 @@ export default class MovieController extends Controller {
     res: Response
   ): Promise<void> {
     const limit = parseInt(query.limit ?? '0', 10) || 4;
-    const films = await this.movieService.find(limit);
-    console.log(limit, films, fillDTO(MovieResponse, films));
-    this.ok(res, fillDTO(MovieResponse, films));
+    const movies = await this.movieService.find(limit);
+    this.ok(res, fillDTO(MovieResponse, movies));
   }
 
   public async create(
@@ -192,7 +191,6 @@ export default class MovieController extends Controller {
   ): Promise<void> {
     const {genre} = params;
     const result = await this.movieService.findByGenre(asGenre(params.genre));
-    console.log(fillDTO(MovieResponse, result));
 
 
     if (!result) {
@@ -247,7 +245,6 @@ export default class MovieController extends Controller {
     const {movieId} = params;
 
     const comments = await this.commentService.findCommentsByMovieId(movieId);
-    console.log(fillDTO(CommentResponse, comments));
     this.ok(res, fillDTO(CommentResponse, comments));
   }
 
