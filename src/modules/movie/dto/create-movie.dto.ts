@@ -31,8 +31,10 @@ export default class CreateMovieDto {
   @IsNumber({},{message: 'Rating must be a number'})
   public rating!: number;
 
+  @IsString({message: 'Video preview link must be a string'})
   public videoPreviewLink!: string;
 
+  @IsString({message: 'Video link must be a string'})
   public videoLink!: string;
 
   @IsArray({message: 'Field actors must be an array'})
@@ -50,13 +52,15 @@ export default class CreateMovieDto {
   @IsInt({message: 'Comment count must be an integer'})
   public commentAmount!: number;
 
-  @IsMongoId({message: 'userId field must be a valid id'})
+  @IsMongoId({message: 'userId field must be valid'})
   public userId!: string;
 
+  @IsString({message: 'Poster link must be a string'})
   public posterLink!: string;
 
+  @IsString({message: 'Background picture link must be a string'})
   public backgroundPictureLink!: string;
 
-  @IsString({message: 'Background color must be an string'})
+  @IsString({message: 'Background color must be a string'})
   public backgroundColor!: string;
 }

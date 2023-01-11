@@ -11,5 +11,5 @@ export default class UserResponse {
   public email!: string;
 
   @Expose()
-  public avatar!: string;
+  public profilePictureLink!: string;
 }
