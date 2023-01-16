@@ -126,7 +126,6 @@ export default class UserController extends Controller {
       );
     }
     const user = await this.userService.findByEmail(req.user.email);
-
     this.ok(res, fillDTO(LoggedUserResponse, user));
   }
 

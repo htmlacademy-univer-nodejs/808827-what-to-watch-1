@@ -8,5 +8,5 @@ export default class FavoriteResponse {
   public title!: string;
 
   @Expose()
-  public poster!: string;
+  public posterLink!: string;
 }

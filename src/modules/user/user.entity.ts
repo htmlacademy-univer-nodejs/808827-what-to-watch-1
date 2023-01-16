@@ -39,9 +39,9 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   public setPassword(password: string, salt: string) {
     if (isPasswordValid(password)) {
       this.password = createSHA256(password, salt);
-    } else {
-      throw new Error('Password length is not correct');
+      return;
     }
+    throw new Error('Password length is not correct');
   }
 
   public verifyPassword(password: string, salt: string) {
