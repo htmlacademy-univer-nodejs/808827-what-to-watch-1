@@ -157,7 +157,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/comment'
         '404':
-          description: Комментарии для фильма не найдены
+          description: Фильм не найден
           
   /movies/{movieId}/video:
     get:
