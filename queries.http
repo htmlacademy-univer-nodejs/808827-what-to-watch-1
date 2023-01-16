@@ -42,7 +42,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZ
 
 ###
 ## Список комментариев к фильму
-GET http://localhost:4200/movies/6352ad1e45a88ec5bc632297/comments HTTP/1.1
+GET http://localhost:4200/movies/6352ad1e45a88ec5bc632296/comments HTTP/1.1
 
 ###
 

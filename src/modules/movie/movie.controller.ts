@@ -244,15 +244,17 @@ export default class MovieController extends Controller {
   ): Promise<void> {
     const {movieId} = params;
 
-    const comments = await this.commentService.findCommentsByMovieId(movieId);
+    const movie = await this.movieService.findById(movieId);
 
-    if (comments?.length === 0) {
+    if (!movie) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        'Comments for movie are not found',
+        'Movie is not found',
         'MovieController'
       );
     }
+
+    const comments = await this.commentService.findCommentsByMovieId(movieId);
 
     this.ok(res, fillDTO(CommentResponse, comments));
   }
